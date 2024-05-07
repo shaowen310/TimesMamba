@@ -44,13 +44,12 @@ class QuadMamba(nn.Module):
         )
         # x, z; z for residual
 
-        # used the original Mamba's implementation of the convolution layer
         self.dwconv = nn.Conv2d(
             in_channels=self.d_inner,
             out_channels=self.d_inner,
             groups=self.d_inner,
             kernel_size=d_conv,
-            padding=d_conv - 1,
+            padding=(d_conv - 1) // 2,
             bias=conv_bias,
             **factory_kwargs,
         )
