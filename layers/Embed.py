@@ -145,10 +145,12 @@ class SeriesEmbedding(nn.Module):
     def forward(self, x, x_mark=None):
         x = x.transpose(1, 2)
         # x: [Batch Variate Time]
-        if x_mark is None:
-            x = self.value_embedding(x)
-        else:
-            # the potential to take covariates (e.g. timestamps) as tokens
-            x = self.value_embedding(torch.cat([x, x_mark.transpose(1, 2)], 1))
+
+        # the potential to take covariates (e.g. timestamps) as tokens
+        if x_mark is not None:
+            x = torch.cat([x, x_mark.transpose(1, 2)], 1)
+
+        x = self.value_embedding(x)
         # x: [Batch Variate d_model]
+
         return self.dropout(x)
