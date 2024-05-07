@@ -18,7 +18,7 @@ def get_lr_scheduler(optimizer, train_epochs, warmup_epochs=0, lradj="type1"):
 
     if lradj == "type1":
         cosine_scheduler = optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, train_epochs - warmup_epochs, eta_min=1e-6
+            optimizer, train_epochs - warmup_epochs, eta_min=1e-5
         )
         schedulers.append(cosine_scheduler)
     elif lradj == "type2":
