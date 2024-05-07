@@ -9,7 +9,7 @@ from mamba_ssm.ops.selective_scan_interface import selective_scan_fn
 DropPath.__repr__ = lambda self: f"timm.DropPath({self.drop_prob})"
 
 
-class SScan(nn.Module):
+class QuadMamba(nn.Module):
     def __init__(
         self,
         d_model=96,
@@ -376,7 +376,7 @@ class QSSBlock(nn.Module):
 
         if self.mamba_branch:
             self.norm = norm_layer(hidden_dim)
-            self.sscan = SScan(
+            self.mamba = QuadMamba(
                 d_model=hidden_dim,
                 expand=ssm_expand,
                 d_state=ssm_d_state,
@@ -408,7 +408,7 @@ class QSSBlock(nn.Module):
         x = input
 
         if self.mamba_branch:
-            x = x + self.drop_path(self.sscan(self.norm(input)))  # SSM
+            x = x + self.drop_path(self.mamba(self.norm(input)))  # SSM
 
         if self.mlp_branch:
             x = x + self.drop_path(self.mlp(self.norm2(x)))  # FFN
@@ -416,7 +416,7 @@ class QSSBlock(nn.Module):
         return x
 
 
-class QSSLayer(nn.Module):
+class MambaformerLayer(nn.Module):
     """A basic Mamba layer for one stage.
     Args:
         dim (int): Number of input channels.
@@ -473,7 +473,7 @@ class QSSLayer(nn.Module):
         return x
 
 
-class QSSM(nn.Module):
+class Mambaformer(nn.Module):
     def __init__(
         self,
         depths=[4],
@@ -497,7 +497,7 @@ class QSSM(nn.Module):
         # build layers
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
-            layer = QSSLayer(
+            layer = MambaformerLayer(
                 dim=dims[i_layer],
                 depth=depths[i_layer],
                 expand=ssm_expand,

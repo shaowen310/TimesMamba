@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from layers.Embed import SeriesEmbedding
 from layers.RevIN import RevIN
-from model.mambacore import QSSM
+from model.mambacore import Mambaformer
 
 
 class Model(nn.Module):
@@ -28,7 +28,7 @@ class Model(nn.Module):
         print(self.enc_embedding)
 
         # Encoder-only architecture
-        self.mamba = QSSM(
+        self.mamba = Mambaformer(
             depths=[config.e_layers],
             dims=[config.d_model],
             ssm_expand=config.ssm_expand,
