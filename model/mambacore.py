@@ -44,12 +44,13 @@ class QuadMamba(nn.Module):
         )
         # x, z; z for residual
 
-        self.conv = nn.Conv2d(
+        # used the original Mamba's implementation of the convolution layer
+        self.dwconv = nn.Conv2d(
             in_channels=self.d_inner,
             out_channels=self.d_inner,
             groups=self.d_inner,
             kernel_size=d_conv,
-            padding="same",
+            padding=d_conv - 1,
             bias=conv_bias,
             **factory_kwargs,
         )
@@ -281,13 +282,14 @@ class QuadMamba(nn.Module):
         W: width, aka. sequence length
         C: channel == d_model
         """
+        _, H, W, _ = x.size()
 
         xz = self.in_proj(x)  # (b, h, w, d_model) -> (b, h, w, d_inner * 2)
         # d_inner: d_model * expand
         x, z = xz.chunk(2, dim=-1)  # (b, h, w, d_inner)
 
         x = torch.permute(x, (0, 3, 1, 2)).contiguous()  # (b, d_inner, h, w)
-        x = self.conv(x)  # (b, d_inner, h, w)
+        x = self.dwconv(x)[..., :H, :W]  # (b, d_inner, h, w)
         x = self.act(x)
         y = self.forward_core(x)  # (b, d_inner, h, w)
         assert y.dtype == torch.float32
