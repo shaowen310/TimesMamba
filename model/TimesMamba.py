@@ -52,16 +52,11 @@ class Model(nn.Module):
 
         if not self.use_mark:
             x_mark_enc = None
+
         enc_out = self.enc_embedding(x_enc, x_mark_enc)  # b nv c
 
         if self.channel_independence:
             enc_out = enc_out.reshape((-1, 1, self.d_model))  # b*nv 1 c
-
-        # compute similarity
-        x_variate_avg = torch.avg_pool1d(
-            enc_out.detach().transpose(1, 2), kernel_size=enc_out.size()[1]
-        ).transpose(1, 2)
-        variate_sim = torch.cosine_similarity(enc_out.detach(), x_variate_avg, dim=2)
 
         enc_out = torch.unsqueeze(enc_out, 1)  # b 1 nv c
         enc_out = self.mamba(enc_out)  # b 1 nv c
