@@ -91,12 +91,12 @@ python -u run.py \
   --dec_in 7 \
   --c_out 7 \
   --des 'Exp' \
-  --d_model 32 \
+  --d_model 64 \
   --r_ff 4 \
   --revin_affine \
   --channel_independence \
   --dropout 0.1 \
   --batch_size 32 \
-  --learning_rate 5e-3 \
+  --learning_rate 5e-4 \
   --train_epochs 10 \
   --itr 1 >&1 | tee logs/ETTh1_720_${model_name}.log
