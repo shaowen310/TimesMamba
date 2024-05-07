@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from layers.Embed import SeriesEmbedding
 from layers.RevIN import RevIN
-from model.mambacore import Mambaformer
+from model.mambacore import MambaForSeriesForecasting
 
 
 class Model(nn.Module):
@@ -28,9 +28,9 @@ class Model(nn.Module):
         print(self.enc_embedding)
 
         # Encoder-only architecture
-        self.mamba = Mambaformer(
-            depths=[config.e_layers],
+        self.mamba = MambaForSeriesForecasting(
             dims=[config.d_model],
+            depths=[config.e_layers],
             ssm_expand=config.ssm_expand,
             ssm_drop_rate=config.dropout,
             mlp_ratio=config.r_ff,

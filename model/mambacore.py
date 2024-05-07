@@ -353,7 +353,7 @@ class Mlp(nn.Module):
         return x
 
 
-class QSSBlock(nn.Module):
+class MambaformerLayer(nn.Module):
     def __init__(
         self,
         hidden_dim: int,
@@ -418,7 +418,7 @@ class QSSBlock(nn.Module):
         return x
 
 
-class MambaformerLayer(nn.Module):
+class Mambaformer(nn.Module):
     """A basic Mamba layer for one stage.
     Args:
         dim (int): Number of input channels.
@@ -447,7 +447,7 @@ class MambaformerLayer(nn.Module):
 
         self.blocks = nn.ModuleList(
             [
-                QSSBlock(
+                MambaformerLayer(
                     dim,
                     ssm_expand=expand,
                     ssm_d_state=ssm_d_state,
@@ -475,11 +475,11 @@ class MambaformerLayer(nn.Module):
         return x
 
 
-class Mambaformer(nn.Module):
+class MambaForSeriesForecasting(nn.Module):
     def __init__(
         self,
-        depths=[4],
         dims=[768],
+        depths=[4],
         ssm_expand=2,
         ssm_d_state=16,
         ssm_conv=3,
@@ -499,7 +499,7 @@ class Mambaformer(nn.Module):
         # build layers
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
-            layer = MambaformerLayer(
+            layer = Mambaformer(
                 dim=dims[i_layer],
                 depth=depths[i_layer],
                 expand=ssm_expand,
@@ -513,8 +513,6 @@ class Mambaformer(nn.Module):
                 norm_layer=norm_layer,
             )
             self.layers.append(layer)
-
-        self.norm = norm_layer(dims[-1])
 
         self.apply(self._init_weights)
 
@@ -532,7 +530,5 @@ class Mambaformer(nn.Module):
 
         for layer in self.layers:
             x = layer(x)  # b h w c
-
-        x = self.norm(x)  # b h w c
 
         return x
