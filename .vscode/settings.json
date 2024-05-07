@@ -1,0 +1,7 @@
+{
+    "search.useIgnoreFiles": false,
+    "files.exclude": {
+        "**/.csv": true,
+        "**/.log": true
+    }
+}

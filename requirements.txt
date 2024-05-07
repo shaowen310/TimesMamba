@@ -1,0 +1,11 @@
+pandas==1.5.3
+scikit-learn==1.2.2
+numpy==1.23.5
+matplotlib==3.7.0
+torch==2.0.1
+reformer-pytorch==1.4.4
+timm==0.9.12
+cuda-nvcc==11.8
+causal-conv1d==1.1.1
+mamba-ssm==1.1.1
+nni
