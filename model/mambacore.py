@@ -513,6 +513,8 @@ class MambaForSeriesForecasting(nn.Module):
             )
             self.layers.append(layer)
 
+        self.norm = norm_layer(dims[-1])
+
         self.apply(self._init_weights)
 
     def _init_weights(self, m: nn.Module):
@@ -529,5 +531,7 @@ class MambaForSeriesForecasting(nn.Module):
 
         for layer in self.layers:
             x = layer(x)  # b h w c
+
+        x = self.norm(x)  # b h w c
 
         return x
