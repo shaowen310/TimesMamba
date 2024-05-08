@@ -16,7 +16,7 @@ The repo implements a Mamba-empowered model for multivariate time series forecas
 
 TimesMamba consists of the following components:
 
-- A reversible instance normalization layer to normalize individual series in a batch. (It is omitted in the diagram below.)
+- A reversible instance normalization layer to normalize individual series.
 - A linear embedding layer that projects individual series into the embedding space.
 - Mamba blocks that capture the correlations among the series.
 
