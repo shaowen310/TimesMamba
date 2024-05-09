@@ -80,7 +80,7 @@ We find that channel independence may be more effective for series having low va
 
 ### Reversible instance normalization
 
-We find this trick works well for most datasets. Learnable affine transformation may boost the performance further for some datasets. However, RevIN does not work well for the (subset of) PEMS dataset. RevIN focuses on solving the distribution shift problem. You may turn off RevIN using `--no_norm`. You may turn on learnable affine transformation using `--revin_affine`.
+[RevIN](https://github.com/ts-kim/RevIN) focuses on solving the distribution shift problem. We find this trick works well for most datasets. Learnable affine transformation may boost the performance further for some datasets. However, RevIN does not work well for the (subset of) PEMS dataset. You may turn off RevIN using `--no_norm`. You may turn on learnable affine transformation using `--revin_affine`.
 
 ### Effective of temporal features
 
