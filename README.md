@@ -39,7 +39,7 @@ The datasets can be obtained by following the instructions in this [repo](https:
 2. Create a conda environment and install Pytorch and necessary dependencies. The environment is named as `timesmamba`. You may run the following bash script.
 
 ```bash
-bash creating.sh
+bash create_env.sh
 ```
 
 ### Model training and evaluation
