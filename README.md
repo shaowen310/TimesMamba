@@ -24,7 +24,7 @@ A Mamba block contains two major components: a bidirectional Mamba and a FFN. Th
 
 ![image](./figures/architecture.png)
 
-We regard the series embedding as a special case of patch embedding where the patch length equals the series length. We consider both channel-mixing and channel-independent modes.
+We regard the series embedding as a special case of patching where the patch length equals the series length. We consider both channel-mixing and channel-independent modes.
 
 ## Datasets
 
