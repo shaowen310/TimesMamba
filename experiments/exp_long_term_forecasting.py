@@ -35,12 +35,13 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         return model_optim
 
     def _select_criterion(self):
-        criterion = nn.MSELoss()
-        return criterion
+        return nn.MSELoss()
 
     def vali(self, vali_data, vali_loader, criterion):
-        total_loss = []
         self.model.eval()
+
+        total_loss = []
+
         with torch.no_grad():
             for i, (batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(
                 vali_loader
@@ -83,6 +84,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         outputs = self.model(
                             batch_x, batch_x_mark, dec_inp, batch_y_mark
                         )
+
                 f_dim = -1 if self.args.features == "MS" else 0
                 outputs = outputs[:, -self.args.pred_len :, f_dim:]
                 batch_y = batch_y[:, -self.args.pred_len :, f_dim:].to(self.device)
@@ -90,11 +92,14 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 pred = outputs.detach().cpu()
                 true = batch_y.detach().cpu()
 
-                loss = criterion(pred, true)
+                loss = criterion(pred, true) * len(batch_x)
 
-                total_loss.append(loss)
-        total_loss = np.average(total_loss)
+                total_loss.append(loss.item())
+
+        total_loss = np.sum(total_loss) / len(vali_loader.dataset)
+
         self.model.train()
+
         return total_loss
 
     def train(self, setting):
@@ -127,6 +132,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         for epoch in range(self.args.train_epochs):
             iter_count = 0
             train_loss = []
+
             print(f"Learning rate {model_optim.param_groups[0]['lr']}")
 
             self.model.train()
