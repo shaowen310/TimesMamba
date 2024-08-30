@@ -352,9 +352,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         f.close()
 
         # result save
-        folder_path = "./results/" + setting + "/"
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+        # folder_path = "./results/" + setting + "/"
+        # if not os.path.exists(folder_path):
+        #     os.makedirs(folder_path)
 
         # np.save(folder_path + "pred.npy", preds)
         # np.save(folder_path + "true.npy", trues)
