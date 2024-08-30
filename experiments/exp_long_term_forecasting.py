@@ -87,7 +87,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
                 f_dim = -1 if self.args.features == "MS" else 0
                 outputs = outputs[:, -self.args.pred_len :, f_dim:]
-                batch_y = batch_y[:, -self.args.pred_len :, f_dim:].to(self.device)
+                batch_y = batch_y[:, -self.args.pred_len :, f_dim:]
 
                 pred = outputs.detach().cpu()
                 true = batch_y.detach().cpu()
@@ -96,9 +96,10 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
                 total_loss.append(loss.item())
 
-        total_loss = np.sum(total_loss) / len(vali_loader.dataset)
-
-        self.model.train()
+        total_samples = len(vali_loader.dataset)
+        if vali_loader.drop_last:
+            total_samples -= len(vali_loader.dataset) % vali_loader.batch_size
+        total_loss = np.sum(total_loss) / total_samples
 
         return total_loss
 
